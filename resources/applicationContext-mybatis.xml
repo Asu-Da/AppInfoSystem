@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns:p="http://www.springframework.org/schema/p"
+	xmlns:aop="http://www.springframework.org/schema/aop"
+	xmlns:context="http://www.springframework.org/schema/context"
+	xmlns:tx="http://www.springframework.org/schema/tx"
+	xmlns:mvc="http://www.springframework.org/schema/mvc"
+	xsi:schemaLocation="http://www.springframework.org/schema/aop 
+		http://www.springframework.org/schema/aop/spring-aop-3.2.xsd
+		http://www.springframework.org/schema/mvc 
+		http://www.springframework.org/schema/mvc/spring-mvc-3.2.xsd
+		http://www.springframework.org/schema/beans 
+		http://www.springframework.org/schema/beans/spring-beans.xsd
+		http://www.springframework.org/schema/tx 
+		http://www.springframework.org/schema/tx/spring-tx-3.2.xsd
+		http://www.springframework.org/schema/context 
+		http://www.springframework.org/schema/context/spring-context-3.2.xsd">
+	<bean class="org.springframework.beans.factory.config.PropertyPlaceholderConfigurer">
+		<property value="classpath:database.properties" name="location"/>
+    </bean>
+	<bean class="org.apache.commons.dbcp.BasicDataSource" id="dataSource">
+		<property value="${driver}" name="driverClassName"/>
+		<property value="${url}" name="url"/>
+		<property value="${username}" name="username"/>
+		<property value="${password}" name="password"/>
+	</bean>
+	<bean class="org.mybatis.spring.SqlSessionFactoryBean" id="sqlSessionFactory">
+		<property name="dataSource" ref="dataSource"/>
+		<property value="classpath:mybatis-config.xml" name="configLocation"/>
+		<!--
+		<property name="mapperLocations">
+			<list><value>classpath:cn/dao/**/*.xml</value></list>
+		</property>
+		-->
+	</bean>
+	<bean class="org.mybatis.spring.mapper.MapperScannerConfigurer">
+		<property value="cn.dao" name="basePackage"/>
+	</bean>
+	<context:component-scan base-package="cn.service"/>
+</beans>
